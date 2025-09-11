@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jogo de Corrida 2D - Música Contínua e Reinício com R</title>
+<title>Jogo de Corrida 2D - Música e Motor Simultâneos</title>
 <style>
 body {
     margin: 0; padding: 0;
@@ -37,7 +37,7 @@ h1 { margin:0; font-size:24px; text-shadow:2px 2px 4px rgba(0,0,0,0.5); }
         <div id="level">Nível: 1</div>
     </div>
     <canvas id="game-canvas" width="400" height="600"></canvas>
-    <div id="controls">Use as setas ← → para mover o carro</div>
+    <div id="controls">Use as setas ← → para mover o carro. Clique para buzinar</div>
     <div id="game-over">
         <div id="final-score">Pontuação: 0</div>
         <div id="restart-text">Pressione "R" para reiniciar</div>
@@ -60,15 +60,19 @@ const crashSound = new Audio("crash.mp3"); crashSound.volume=0.8;
 const musicSound = new Audio("musica.mp3"); musicSound.loop=true; musicSound.volume=0.40;
 [engineSound,hornSound,crashSound,musicSound].forEach(s=>s.load());
 
-// Funções de música
-function startMusic(){ musicSound.currentTime=0; musicSound.play().catch(()=>{}); }
-function stopMusic(){ musicSound.pause(); }
+// Música de fundo já começa ao carregar
+window.addEventListener('load', ()=>{ musicSound.play().catch(()=>{}); });
 
-// Motor com setas ↑
-document.addEventListener("keydown", e => { if(e.key==="ArrowUp" && engineSound.paused) engineSound.play(); });
-document.addEventListener("keyup", e => { if(e.key==="ArrowUp") engineSound.pause(); });
+// Motor só toca enquanto ↑ pressionado
+let accelerating=false;
+document.addEventListener("keydown", e => {
+    if(e.key==="ArrowUp"){ accelerating=true; if(engineSound.paused) engineSound.play(); }
+});
+document.addEventListener("keyup", e => {
+    if(e.key==="ArrowUp"){ accelerating=false; engineSound.pause(); }
+});
 
-// Buzina curta com clique
+// Buzina apenas ao clicar o mouse
 document.addEventListener("mousedown", e => { if(e.button===0){ hornSound.currentTime=0; hornSound.play(); setTimeout(()=>hornSound.pause(),400); } });
 
 // Variáveis do jogo
@@ -92,7 +96,7 @@ function init(){
     car.x=canvas.width/2-15; car.y=canvas.height-100;
     if(bounceInterval) { clearInterval(bounceInterval); bounceInterval=null; }
     lastTimestamp=0; 
-    startMusic(); // inicia música
+    musicSound.currentTime=0; musicSound.play().catch(()=>{}); // reinicia música ao reiniciar
     requestAnimationFrame(gameLoop);
 }
 
@@ -139,7 +143,7 @@ function checkCollisions(){
 }
 
 function gameOver(){
-    gameRunning=false; crashSound.play(); stopMusic();
+    gameRunning=false; crashSound.play(); engineSound.pause(); musicSound.pause();
     finalScoreElement.textContent=`Pontuação: ${score}`;
     gameOverScreen.style.display='flex';
     // Efeito quicar
