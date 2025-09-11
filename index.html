@@ -201,7 +201,9 @@
         });
 
         renderAll(root);
-      } 
+      } catch (err) {
+  statusEl.textContent = '❌ Falha: ' + err.message;
+  console.error('Erro ao carregar árvore:', err);}
     }
 
     function renderAll(root) {
