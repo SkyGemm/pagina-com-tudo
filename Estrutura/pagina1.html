@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Python e HTML Juntos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border-left: 4px solid #3498db;
+      overflow-x: auto;
+    }
+    a {
+      color: #3498db;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    hr {
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Python e HTML Juntos: Uma Dupla Poderosa na Web</h1>
+  <p>Python e HTML são linguagens com propósitos diferentes, mas quando combinadas, elas se tornam a base para a maioria dos sites e aplicações web que usamos todos os dias. Pense no HTML como o esqueleto e a pele de um site, e no Python como o cérebro que faz tudo funcionar por trás das cenas.</p>
+
+  <h2>O que é HTML? (A Estrutura da Página)</h2>
+  <p>HTML (HyperText Markup Language) é a linguagem padrão para criar páginas web. Ele define a estrutura e o conteúdo de uma página. Imagine-o como o projeto arquitetônico de uma casa, especificando onde as paredes, janelas e portas estarão.</p>
+
+  <h3>Exemplo Simples de HTML:</h3>
+  <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+   &lt;title&gt;Minha Primeira Página&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+   &lt;h1&gt;Bem-vindo ao meu site!&lt;/h1&gt;
+   &lt;p&gt;Este é um parágrafo de exemplo.&lt;/p&gt;
+   &lt;a href="https://www.google.com"&gt;Ir para o Google&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+  <ul>
+    <li><code>&lt;h1&gt;</code> é um título principal.</li>
+    <li><code>&lt;p&gt;</code> é um parágrafo.</li>
+    <li><code>&lt;a&gt;</code> é um link.</li>
+  </ul>
+
+  <p>Quando você abre esse código em um navegador, ele renderiza a página com o título, o parágrafo e o link. O HTML é estático, ou seja, ele não faz nada por si só além de exibir o conteúdo.</p>
+
+  <h2>O que é Python? (A Lógica por Trás da Cena)</h2>
+  <p>Python é uma linguagem de programação versátil e poderosa que pode ser usada para muitas coisas, incluindo o desenvolvimento web. No contexto da web, Python é frequentemente usado no "backend" (o lado do servidor), onde ele lida com a lógica, o processamento de dados e a interação com bancos de dados.</p>
+
+  <h3>Exemplo Simples de Python:</h3>
+  <pre><code>nome = "Mundo"
+mensagem = f"Olá, {nome}!"
+print(mensagem)</code></pre>
+
+  <p>Este código Python define uma variável <code>nome</code>, cria uma mensagem personalizada e a imprime. Ele é dinâmico e pode realizar cálculos, tomar decisões e interagir com outros sistemas.</p>
+
+  <h2>Como Eles Trabalham Juntos? (O Backend e o Frontend)</h2>
+  <p>Aqui é onde a mágica acontece! Python e HTML se unem através de frameworks web como Flask ou Django.</p>
+
+  <ol>
+    <li><strong>Requisição do Navegador:</strong> o navegador envia uma "requisição" para um servidor.</li>
+    <li><strong>Processamento pelo Python:</strong> o servidor executa a lógica necessária (dados, formulários, decisões).</li>
+    <li><strong>Geração do HTML Dinâmico:</strong> o Python insere dados no HTML dinamicamente.</li>
+    <li><strong>Resposta ao Navegador:</strong> o HTML é enviado de volta para exibição.</li>
+  </ol>
+
+  <h3>Exemplo Prático com Flask:</h3>
+  <pre><code>from flask import Flask, render_template_string
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    nome_usuario = "Visitante"
+    html_content = f"""
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;head&gt;&lt;title&gt;Saudação&lt;/title&gt;&lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;Olá, {nome_usuario}!&lt;/h1&gt;
+        &lt;p&gt;A data e hora atual é: {get_current_time()}&lt;/p&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+    """
+    return render_template_string(html_content)
+
+def get_current_time():
+    from datetime import datetime
+    return datetime.now().strftime("%H:%M:%S em %d/%m/%Y")
+
+if __name__ == '__main__':
+    app.run(debug=True)</code></pre>
+
+  <p>Ao acessar <code>http://127.0.0.1:5000/</code>, o Flask executa a função e exibe o HTML com nome e hora.</p>
+
+  <h2>Templates com Jinja2:</h2>
+  <p>Ao invés de montar HTML no Python, usamos templates:</p>
+
+  <h3>Arquivo HTML (index.html):</h3>
+  <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Saudação com Template&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Olá, {{ nome }}!&lt;/h1&gt;
+    &lt;p&gt;Você está acessando a página agora: {{ data_hora }}.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+  <h3>Código Python:</h3>
+  <pre><code>from flask import Flask, render_template
+from datetime import datetime
+
+app = Flask(__name__)
+
+@app.route('/')
+def home_template():
+    nome_usuario = "Aventureiro"
+    data_atual = datetime.now().strftime("%H:%M:%S em %d/%m/%Y")
+    return render_template('index.html', nome=nome_usuario, data_hora=data_atual)</code></pre>
+
+  <h2>Resumo Final</h2>
+  <ul>
+    <li><strong>HTML:</strong> estrutura e aparência da página.</li>
+    <li><strong>Python:</strong> lógica, dados e interatividade.</li>
+    <li><strong>Juntos:</strong> páginas web modernas, interativas e inteligentes.</li>
+  </ul>
+
+  <hr>
+  <p><strong><a href="pagina2.html">→ Quer continuar aprendendo?</a></strong></p>
+
+</body>
+</html>
