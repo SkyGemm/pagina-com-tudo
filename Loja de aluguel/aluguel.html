@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aluguel de Veículos - Dados do Aluguel</title>
+    <link rel="stylesheet" href="css-style.css">
+</head>
+<body>
+    <header class="cabecalho">
+        <h1>AlugaCarros</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="veiculos.html">Veículos</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="conteudo">
+        <h2>Dados para Aluguel</h2>
+        
+        <div id="info-veiculo">
+           
+        </div>
+        
+        <form id="formAluguel" class="form-aluguel">
+            <h3>Dados do Motorista</h3>
+            
+            <div class="campo-form">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            
+            <div class="campo-form">
+                <label for="cpf">CPF:</label>
+                <input type="text" id="cpf" name="cpf" required>
+            </div>
+            
+            <div class="campo-form">
+                <label for="cnh">Número da CNH:</label>
+                <input type="text" id="cnh" name="cnh" required>
+            </div>
+            
+            <div class="campo-form">
+                <label for="validade-cnh">Validade da CNH:</label>
+                <input type="date" id="validade-cnh" name="validade-cnh" required>
+            </div>
+            
+            <div class="campo-form">
+                <label for="data-retirada">Data de Retirada:</label>
+                <input type="date" id="data-retirada" name="data-retirada" required>
+            </div>
+            
+            <div class="campo-form">
+                <label for="data-devolucao">Data de Devolução:</label>
+                <input type="date" id="data-devolucao" name="data-devolucao" required>
+            </div>
+            
+            <button type="submit" class="botao">Finalizar Aluguel</button>
+        </form>
+    </main>
+
+    <footer class="rodape">
+        <p>&copy; 2025 AlugaCarros. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="js-script.js"></script>
+</body>
+</html>

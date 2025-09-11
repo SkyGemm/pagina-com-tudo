@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aluguel de Veículos - Login</title>
+    <link rel="stylesheet" href="css-style.css">
+</head>
+<body>
+    <header class="cabecalho">
+        <h1>AlugaCarros</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="veiculos.html">Veículos</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="conteudo">
+        <section class="login-form">
+            <h2>Área do Administrador</h2>
+            <form id="formLogin">
+                <div class="campo-form">
+                    <label for="usuario">Usuário:</label>
+                    <input type="text" id="usuario" name="usuario" required>
+                </div>
+                <div class="campo-form">
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" required>
+                </div>
+                <button type="submit" class="botao">Entrar</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="rodape">
+        <p>&copy; 2025 AlugaCarros. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="js-script.js"></script>
+</body>
+</html>
