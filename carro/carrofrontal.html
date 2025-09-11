@@ -30,17 +30,42 @@
   <script>
     // --- Sons ---
     const engineSound = new Audio("aceleracao.mp3");
-    engineSound.loop = true; engineSound.volume = 0.15;
-    const hornSound = new Audio("buzinacarro.mp3"); hornSound.volume = 0.5;
-    const crashSound = new Audio("crash.mp3"); crashSound.volume = 0.8;
-    const musicSound = new Audio("musica.mp3"); musicSound.loop = true; musicSound.volume = 0.50;
+    engineSound.loop = true;
+    engineSound.volume = 0.15;
+
+    const hornSound = new Audio("buzinacarro.mp3");
+    hornSound.volume = 0.5;
+
+    const crashSound = new Audio("crash.mp3");
+    crashSound.volume = 0.8;
+
+    const musicSound = new Audio("musica.mp3");
+    musicSound.loop = true;
+    musicSound.volume = 0.50;
+
     [engineSound, hornSound, crashSound, musicSound].forEach(s => s.load());
 
-    document.addEventListener("keydown", e => { if (e.key === "ArrowUp") { if(engineSound.paused) engineSound.play(); } });
-    document.addEventListener("keyup", e => { if (e.key === "ArrowUp") { engineSound.pause(); } });
+    // --- Música começa automaticamente ---
+    window.addEventListener('load', () => {
+      musicSound.currentTime = 0;
+      musicSound.play().catch(()=>{}); // catch para evitar bloqueio por autoplay
+    });
 
+    // Motor só com setas ↑
+    document.addEventListener("keydown", e => {
+      if(e.key === "ArrowUp" && engineSound.paused) engineSound.play();
+    });
+    document.addEventListener("keyup", e => {
+      if(e.key === "ArrowUp") engineSound.pause();
+    });
+
+    // Buzina apenas no clique
     document.addEventListener("mousedown", e => {
-      if (e.button === 0) { hornSound.currentTime=0; hornSound.play(); setTimeout(()=>hornSound.pause(),200); }
+      if(e.button === 0) {
+        hornSound.currentTime = 0;
+        hornSound.play();
+        setTimeout(() => hornSound.pause(), 200);
+      }
     });
 
     // --- Jogo ---
@@ -60,22 +85,61 @@
     const road = new THREE.Mesh(roadGeo, roadMat); road.rotation.x = -Math.PI/2; road.position.z = -120; scene.add(road);
 
     const stripes = [];
-    function createStripe(z){ const g = new THREE.PlaneGeometry(0.2, 4); const m = new THREE.MeshBasicMaterial({ color:0xffffff }); const s = new THREE.Mesh(g,m); s.rotation.x=-Math.PI/2; s.position.set(0,0.02,z); scene.add(s); stripes.push(s); }
+    function createStripe(z){ 
+      const g = new THREE.PlaneGeometry(0.2, 4);
+      const m = new THREE.MeshBasicMaterial({ color:0xffffff });
+      const s = new THREE.Mesh(g,m); 
+      s.rotation.x=-Math.PI/2; 
+      s.position.set(0,0.02,z); 
+      scene.add(s); 
+      stripes.push(s); 
+    }
     for(let i=0;i<200;i+=5) createStripe(-i);
 
     const lamps = [], buildings = [];
-    function createLamp(x,z){ const post = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.1,4), new THREE.MeshPhongMaterial({ color:0xaaaaaa })); post.position.set(x,2,z); const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.25,8,8), new THREE.MeshPhongMaterial({ color:0xffffaa, emissive:0xffff33 })); bulb.position.set(0,1.9,0); post.add(bulb); scene.add(post); lamps.push(post); }
+    function createLamp(x,z){ 
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.1,4), new THREE.MeshPhongMaterial({ color:0xaaaaaa })); 
+      post.position.set(x,2,z); 
+      const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.25,8,8), new THREE.MeshPhongMaterial({ color:0xffffaa, emissive:0xffff33 })); 
+      bulb.position.set(0,1.9,0); 
+      post.add(bulb); 
+      scene.add(post); 
+      lamps.push(post); 
+    }
     for(let i=0;i<40;i++){ createLamp(-ROAD_W/2 - 2, -i*8 - 6); createLamp(ROAD_W/2 + 2, -i*8 - 2); }
-    function createBuilding(z){ const w=3+Math.random()*6; const h=6+Math.random()*20; const d=3+Math.random()*6; const mat=new THREE.MeshPhongMaterial({ color:Math.random()*0xffffff }); const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat); const side=Math.random()<0.5?-1:1; const x=side*(ROAD_W/2 + 6 + Math.random()*12); b.position.set(x,h/2,z); scene.add(b); buildings.push(b); }
+
+    function createBuilding(z){ 
+      const w=3+Math.random()*6; 
+      const h=6+Math.random()*20; 
+      const d=3+Math.random()*6; 
+      const mat=new THREE.MeshPhongMaterial({ color:Math.random()*0xffffff }); 
+      const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d), mat); 
+      const side=Math.random()<0.5?-1:1; 
+      const x=side*(ROAD_W/2 + 6 + Math.random()*12); 
+      b.position.set(x,h/2,z); 
+      scene.add(b); 
+      buildings.push(b); 
+    }
     for(let i=0;i<60;i++) createBuilding(-i*12 - 20);
 
     const player = new THREE.Group();
-    const body = new THREE.Mesh(new THREE.BoxGeometry(2.4,0.6,4.2), new THREE.MeshPhongMaterial({ color:0x3366cc })); body.position.y=0.6; player.add(body);
-    const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.8,0.8,2.2), new THREE.MeshPhongMaterial({ color:0x111111, transparent:true, opacity:0.75 })); cabin.position.y=1; player.add(cabin);
+    const body = new THREE.Mesh(new THREE.BoxGeometry(2.4,0.6,4.2), new THREE.MeshPhongMaterial({ color:0x3366cc }));
+    body.position.y=0.6; player.add(body);
+    const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.8,0.8,2.2), new THREE.MeshPhongMaterial({ color:0x111111, transparent:true, opacity:0.75 }));
+    cabin.position.y=1; player.add(cabin);
     player.position.set(0,0,5); scene.add(player);
 
     const npcs=[];
-    function spawnNpc(z){ const g=new THREE.Group(); const col=new THREE.MeshPhongMaterial({ color: Math.random()*0xffffff }); const b=new THREE.Mesh(new THREE.BoxGeometry(2.0,0.6,3.2), col); b.position.y=0.5; g.add(b); const lane = Math.floor(Math.random()*3); const laneX = (lane-1)*(ROAD_W/3); g.userData = { lane, z: z || -200 - Math.random()*200, type: Math.random()<0.3?'oil':'npc', passed:false }; g.position.set(laneX,0,g.userData.z); scene.add(g); npcs.push(g); }
+    function spawnNpc(z){ 
+      const g=new THREE.Group(); 
+      const col=new THREE.MeshPhongMaterial({ color: Math.random()*0xffffff }); 
+      const b=new THREE.Mesh(new THREE.BoxGeometry(2.0,0.6,3.2), col); b.position.y=0.5; g.add(b); 
+      const lane = Math.floor(Math.random()*3); 
+      const laneX = (lane-1)*(ROAD_W/3); 
+      g.userData = { lane, z: z || -200 - Math.random()*200, type: Math.random()<0.3?'oil':'npc', passed:false }; 
+      g.position.set(laneX,0,g.userData.z); 
+      scene.add(g); npcs.push(g); 
+    }
     for(let i=0;i<6;i++) spawnNpc(-i*40-60);
 
     let running=true, score=0, startTime=performance.now(), level=1, speed=0, maxSpeed=600/3.6;
@@ -88,9 +152,6 @@
     let slipTimer=0; let keys={};
     document.addEventListener('keydown', e=>keys[e.key]=true);
     document.addEventListener('keyup', e=>keys[e.key]=false);
-
-    // --- Começa música ao carregar o jogo ---
-    musicSound.play();
 
     const clock=new THREE.Clock();
     function animate(){ if(!running) return; requestAnimationFrame(animate); const dt=clock.getDelta(); update(dt); renderer.render(scene,camera); }
@@ -125,7 +186,7 @@
 
       score += speed*dt*0.5; scoreEl.textContent=`Pontos: ${Math.floor(score)}`;
       const elapsed=Math.floor((performance.now()-startTime)/1000); timeEl.textContent=`Tempo: ${elapsed}s`;
-      const newLevel=Math.floor(elapsed/20)+1; if(newLevel!==level){ level=newLevel; level= newLevel; levelEl.textContent=`Nível: ${level}`; }
+      const newLevel=Math.floor(elapsed/20)+1; if(newLevel!==level){ level=newLevel; levelEl.textContent=`Nível: ${level}`; }
 
       camera.position.x += (player.position.x - camera.position.x)*dt*3;
       camera.position.y = 15; camera.position.z = 25 - Math.min(10,speed*0.05);
@@ -139,6 +200,7 @@
       gameOverScreen.style.display='flex';
       musicSound.pause();
       musicSound.currentTime = 0;
+      engineSound.pause();
     }
 
     document.addEventListener('keydown', e => { if(e.key.toLowerCase()==='r' && !running){ restartGame(); } });
