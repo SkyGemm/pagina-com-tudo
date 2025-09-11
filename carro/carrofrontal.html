@@ -24,42 +24,23 @@
     <h1>GAME OVER</h1>
     <p id="finalScore">Pontuação: 0</p>
     <p id="restartHint">Pressione "R" para reiniciar</p>
-    <div id="scoreHistory"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
   <script>
     // --- Sons ---
     const engineSound = new Audio("aceleracao.mp3");
-    engineSound.loop = true;
-    engineSound.volume = 0.15;
-
-    const hornSound = new Audio("buzinacarro.mp3");
-    hornSound.volume = 0.5;
-
-    const crashSound = new Audio("crash.mp3");
-    crashSound.volume = 0.8;
-
-    const musicSound = new Audio("musica.mp3");
-    musicSound.loop = true;
-    musicSound.volume = 0.50;
-
+    engineSound.loop = true; engineSound.volume = 0.15;
+    const hornSound = new Audio("buzinacarro.mp3"); hornSound.volume = 0.5;
+    const crashSound = new Audio("crash.mp3"); crashSound.volume = 0.8;
+    const musicSound = new Audio("musica.mp3"); musicSound.loop = true; musicSound.volume = 0.50;
     [engineSound, hornSound, crashSound, musicSound].forEach(s => s.load());
-    musicSound.play();
 
-    document.addEventListener("keydown", e => {
-      if (e.key === "ArrowUp") { if (engineSound.paused) engineSound.play(); }
-    });
-    document.addEventListener("keyup", e => {
-      if (e.key === "ArrowUp") { engineSound.pause(); }
-    });
+    document.addEventListener("keydown", e => { if (e.key === "ArrowUp") { if(engineSound.paused) engineSound.play(); } });
+    document.addEventListener("keyup", e => { if (e.key === "ArrowUp") { engineSound.pause(); } });
 
     document.addEventListener("mousedown", e => {
-      if (e.button === 0) {
-        hornSound.currentTime = 0;
-        hornSound.play();
-        setTimeout(() => { hornSound.pause(); }, 200);
-      }
+      if (e.button === 0) { hornSound.currentTime=0; hornSound.play(); setTimeout(()=>hornSound.pause(),200); }
     });
 
     // --- Jogo ---
@@ -98,17 +79,18 @@
     for(let i=0;i<6;i++) spawnNpc(-i*40-60);
 
     let running=true, score=0, startTime=performance.now(), level=1, speed=0, maxSpeed=600/3.6;
-
     const scoreEl=document.getElementById('score');
     const timeEl=document.getElementById('time');
     const levelEl=document.getElementById('level');
     const gameOverScreen=document.getElementById('gameOverScreen');
     const finalScore=document.getElementById('finalScore');
 
-    let slipTimer=0;
-    let keys = {};
-    document.addEventListener('keydown', e => keys[e.key] = true);
-    document.addEventListener('keyup', e => keys[e.key] = false);
+    let slipTimer=0; let keys={};
+    document.addEventListener('keydown', e=>keys[e.key]=true);
+    document.addEventListener('keyup', e=>keys[e.key]=false);
+
+    // --- Começa música ao carregar o jogo ---
+    musicSound.play();
 
     const clock=new THREE.Clock();
     function animate(){ if(!running) return; requestAnimationFrame(animate); const dt=clock.getDelta(); update(dt); renderer.render(scene,camera); }
@@ -127,7 +109,7 @@
       if(keys['ArrowLeft']) player.position.x -= 0.8*dt*60;
       if(keys['ArrowRight']) player.position.x += 0.8*dt*60;
       player.position.x = Math.max(-limit, Math.min(limit, player.position.x));
-      if(keys['ArrowDown']) speed -= 80*dt; speed = Math.max(0, speed);
+      if(keys['ArrowDown']) speed -= 80*dt; speed=Math.max(0,speed);
 
       for(let i=npcs.length-1;i>=0;i--){
         const npc=npcs[i]; npc.userData.z += worldMove - 8*dt; npc.position.z=npc.userData.z;
@@ -143,7 +125,7 @@
 
       score += speed*dt*0.5; scoreEl.textContent=`Pontos: ${Math.floor(score)}`;
       const elapsed=Math.floor((performance.now()-startTime)/1000); timeEl.textContent=`Tempo: ${elapsed}s`;
-      const newLevel=Math.floor(elapsed/20)+1; if(newLevel!==level){ level=newLevel; levelEl.textContent=`Nível: ${level}`; }
+      const newLevel=Math.floor(elapsed/20)+1; if(newLevel!==level){ level=newLevel; level= newLevel; levelEl.textContent=`Nível: ${level}`; }
 
       camera.position.x += (player.position.x - camera.position.x)*dt*3;
       camera.position.y = 15; camera.position.z = 25 - Math.min(10,speed*0.05);
@@ -155,20 +137,18 @@
       crashSound.play();
       finalScore.textContent=`Pontuação: ${Math.floor(score)}`;
       gameOverScreen.style.display='flex';
+      musicSound.pause();
+      musicSound.currentTime = 0;
     }
 
-    // Reiniciar com R
-    document.addEventListener('keydown', e => {
-      if(e.key.toLowerCase() === 'r' && !running){
-        restartGame();
-      }
-    });
+    document.addEventListener('keydown', e => { if(e.key.toLowerCase()==='r' && !running){ restartGame(); } });
 
     function restartGame(){
       for(const npc of npcs) scene.remove(npc); npcs.length=0;
       for(let i=0;i<6;i++) spawnNpc(-i*40-60);
       score=0; startTime=performance.now(); level=1; speed=0; running=true;
       gameOverScreen.style.display='none';
+      musicSound.currentTime = 0; musicSound.play();
       animate();
     }
 
@@ -176,4 +156,3 @@
   </script>
 </body>
 </html>
-
