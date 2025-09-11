@@ -61,7 +61,7 @@ const musicSound = new Audio("musica.mp3"); musicSound.loop=true; musicSound.vol
 [engineSound,hornSound,crashSound,musicSound].forEach(s=>s.load());
 
 // Música de fundo já começa ao carregar
-window.addEventListener('load', ()=>{ musicSound.play().catch(()=>{}); });
+window.addEventListener('load', (1)=>{ musicSound.play().catch(()=>{}); });
 
 // Motor só toca enquanto ↑ pressionado
 let accelerating=false;
@@ -171,3 +171,4 @@ init();
 </script>
 </body>
 </html>
+
