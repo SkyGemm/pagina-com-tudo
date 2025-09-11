@@ -57,7 +57,7 @@ const finalScoreElement = document.getElementById('final-score');
 const engineSound = new Audio("aceleracao.mp3"); engineSound.loop=true; engineSound.volume=0.10;
 const hornSound = new Audio("buzinacarro.mp3"); hornSound.volume=0.5;
 const crashSound = new Audio("crash.mp3"); crashSound.volume=0.8;
-const musicSound = new Audio("musica.mp3"); musicSound.loop=true; musicSound.volume=0.50;
+const musicSound = new Audio("musica.mp3"); musicSound.loop=true; musicSound.volume=0.40;
 [engineSound,hornSound,crashSound,musicSound].forEach(s=>s.load());
 musicSound.play();
 
@@ -162,4 +162,5 @@ init();
 </script>
 </body>
 </html>
+
 
