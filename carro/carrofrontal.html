@@ -35,7 +35,7 @@
     // --- Sons ---
     const engineSound = new Audio("aceleracao.mp3");
     engineSound.loop = true;
-    engineSound.volume = 0.7;
+    engineSound.volume = 0.15;
 
     const hornSound = new Audio("buzinacarro.mp3");
     hornSound.volume = 0.5;
@@ -45,7 +45,7 @@
 
     const musicSound = new Audio("musica.mp3");
     musicSound.loop = true;
-    musicSound.volume = 0.10; // música de fundo baixa
+    musicSound.volume = 0.20; // música de fundo baixa
 
     [engineSound, hornSound, crashSound, musicSound].forEach(s => s.load());
     musicSound.play();
@@ -180,3 +180,4 @@
   </script>
 </body>
 </html>
+
