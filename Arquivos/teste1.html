@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Links do repositório All_Files</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #e0e7ff, #f3e8ff);
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px;
+      background: #1e1b4b;
+      color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    }
+    h1 {font-size: 1.5rem; margin: 0;}
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px auto;
+      max-width: 900px;
+      padding: 0 16px;
+    }
+    input[type=text], button {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    input[type=text] { flex: 1; }
+    button {
+      background: #6366f1;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #4f46e5; }
+    .meta, #status {
+      margin: 10px auto;
+      max-width: 900px;
+      padding: 0 16px;
+      color: #444;
+      font-size: 0.9rem;
+    }
+    .list { max-width: 900px; margin: 20px auto; padding: 0 16px; }
+    .top-buttons { margin-bottom: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { padding: 6px 12px; border-radius: 6px; font-size: 0.9rem; text-decoration: none; font-weight: 500; transition: background 0.2s; }
+    .btn-code { background: #6366f1; color: white; }
+    .btn-code:hover { background: #4f46e5; }
+    .btn-test { background: #8b5cf6; color: white; }
+    .btn-test:hover { background: #7c3aed; }
+    .btn-react1 { background: #10b981; color: white; }
+    .btn-react1:hover { background: #059669; }
+    .btn-react2 { background: #f59e0b; color: white; }
+    .btn-react2:hover { background: #d97706; }
+    .btn-react3 { background: #ef4444; color: white; }
+    .btn-react3:hover { background: #b91c1c; }
+    .folder { background: white; margin: 12px 0; padding: 12px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .folder h3 { margin: 0; font-size: 1.1rem; color: #4338ca; display: flex; align-items: center; cursor: pointer; }
+    .folder h3 .arrow { display: inline-block; margin-right: 6px; transition: transform 0.3s ease; }
+    ul { list-style: none; padding: 0; margin: 8px 0 0; overflow: hidden; max-height: 0; transition: max-height 0.4s ease; }
+    ul.open { max-height: 2000px; }
+    li { margin: 6px 0; padding: 6px; border-radius: 6px; transition: background 0.2s; display: flex; align-items: center; gap: 8px; }
+    li:hover { background: #eef2ff; }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 10px auto;
+      max-width: 900px;
+      padding: 0 16px;
+    }
+    .filters label { font-size: 0.9rem; cursor: pointer; }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #1e1b4b;
+      color: white;
+      margin-top: 40px;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <svg width="40" height="40" viewBox="0 0 16 16" fill="white" aria-hidden>
+      <path d="M8 .198a7.802 7.802 0 00-2.466 15.218c.39.072.533-.17.533-.378 0-.186-.007-.679-.01-1.333-2.168.471-2.625-1.044-2.625-1.044-.354-.901-.866-1.143-.866-1.143-.708-.484.054-.474.054-.474.783.055 1.195.805 1.195.805.696 1.193 1.826.849 2.271.65.071-.506.273-.85.497-1.046-1.732-.197-3.553-.866-3.553-3.854 0-.852.305-1.55.805-2.096-.081-.197-.349-.99.077-2.063 0 0 .659-.211 2.16.8a7.47 7.47 0 011.968-.265c.67.003 1.345.09 1.968.265 1.5-1.01 2.158-.8 2.158-.8.428 1.073.16 1.866.08 2.063.5.546.803 1.244.803 2.096 0 2.994-1.825 3.653-3.563 3.846.281.244.532.725.532 1.462 0 1.055-.01 1.906-.01 2.165 0 .21.14.454.537.377A7.803 7.803 0 008 .198z"/>
+    </svg>
+    <div>
+      <h1>All_Files — Links do Repositório</h1>
+      <div class="meta" style="color:#ddd">Carrega a lista de arquivos e gera links (raw/GitHub)</div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <input id="search" type="text" placeholder="🔍 Pesquisar por nome/extensão..." />
+    <button id="refresh">⟳ Atualizar</button>
+  </div>
+
+  <div class="filters" id="filters"></div>
+
+  <div class="meta">Repositório: <a id="repoLink" href="#" target="_blank"></a></div>
+  <div id="status" class="meta"></div>
+
+  <div class="list" id="filesList">
+    <div class="top-buttons">
+      <a href="https://snack.expo.dev/@vini2126/hello" target="_blank" class="btn btn-react3">React Hello</a>
+      <a href="https://snack.expo.dev/@vini2126/lanchonete" target="_blank" class="btn btn-react1">React Lanchonete</a>
+      <a href="https://snack.expo.dev/@vini2126/fincaneiro" target="_blank" class="btn btn-react2">React Fincaneiro</a>
+      <a href="https://snack.expo.dev/@vini2126/conversor" target="_blank" class="btn btn-react3">React Conversor</a>
+    </div>
+  </div>
+
+  <script>
+    const owner = 'SkyGemm';
+    const repo = 'All-Files';
+    const branch = 'main';
+    const repoUrl = `https://github.com/${owner}/${repo}`;
+    document.getElementById('repoLink').href = repoUrl;
+    document.getElementById('repoLink').textContent = repoUrl;
+
+    const statusEl = document.getElementById('status');
+    const filesList = document.getElementById('filesList');
+    const searchInput = document.getElementById('search');
+    const refreshBtn = document.getElementById('refresh');
+    const filtersEl = document.getElementById('filters');
+
+    let selectedExts = new Set();
+
+    async function loadTree() {
+      statusEl.textContent = '⏳ Carregando lista de arquivos...';
+      filesList.querySelectorAll('ul, .folder').forEach(el => el.remove());
+
+      filtersEl.innerHTML = '';
+      try {
+        const apiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
+        const res = await fetch(apiUrl);
+        if(!res.ok) throw new Error('Erro ao acessar a API do GitHub: ' + res.status);
+        const data = await res.json();
+        const tree = data.tree || [];
+
+        const root = buildHierarchy(tree);
+
+        // gera lista de extensões
+        const extensions = [...new Set(tree
+          .filter(item => item.type === 'blob')
+          .map(item => {
+            const parts = item.path.split('.');
+            return parts.length > 1 ? '.' + parts.pop().toLowerCase() : '(sem extensão)';
+          })
+        )].sort();
+
+        // botão selecionar/deselecionar tudo
+        const toggleBtn = document.createElement('button');
+        toggleBtn.textContent = 'Desmarcar tudo';
+        let allSelected = true;
+        toggleBtn.addEventListener('click', () => {
+          allSelected = !allSelected;
+          selectedExts.clear();
+          filtersEl.querySelectorAll('input[type=checkbox]').forEach(chk => {
+            chk.checked = allSelected;
+            if(allSelected) selectedExts.add(chk.value);
+          });
+          toggleBtn.textContent = allSelected ? 'Desmarcar tudo' : 'Selecionar tudo';
+          renderAll(root);
+        });
+        filtersEl.appendChild(toggleBtn);
+
+        // checkboxes
+        extensions.forEach(ext => {
+          const label = document.createElement('label');
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.value = ext;
+          checkbox.checked = true;
+          selectedExts.add(ext);
+          checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+              selectedExts.add(ext);
+            } else {
+              selectedExts.delete(ext);
+            }
+            renderAll(root);
+          });
+          label.appendChild(checkbox);
+          label.appendChild(document.createTextNode(' ' + ext));
+          filtersEl.appendChild(label);
+        });
+
+        statusEl.textContent = `✅ Arquivos encontrados: ${tree.length}`;
+        renderAll(root);
+      } catch (err) {
+        statusEl.textContent = '❌ Falha: ' + err.message;
+      }
+    }
+
+    function renderAll(root) {
+      let topButtons = filesList.querySelector('.top-buttons');
+      renderFolder(root, filesList, true);
+      filesList.insertBefore(topButtons, filesList.firstChild);
+    }
+
+    function buildHierarchy(tree) {
+      const root = { type: 'folder', name: '', children: {} };
+      tree.forEach(item => {
+        if (item.type !== 'blob') return;
+        const parts = item.path.split('/');
+        let current = root;
+        parts.forEach((part, i) => {
+          if (i === parts.length - 1) {
+            current.children[part] = { type: 'file', name: part, path: item.path, size: item.size };
+          } else {
+            if (!current.children[part]) {
+              current.children[part] = { type: 'folder', name: part, children: {} };
+            }
+            current = current.children[part];
+          }
+        });
+      });
+      return root;
+    }
+
+    function renderFolder(node, container, isRoot=false) {
+      const search = searchInput.value.trim().toLowerCase();
+      let keys = Object.keys(node.children);
+
+      // arquivos primeiro, depois pastas
+      keys.sort((a, b) => {
+        const aType = node.children[a].type;
+        const bType = node.children[b].type;
+        if (aType !== bType) return aType === 'file' ? -1 : 1;
+        return a.localeCompare(b);
+      });
+
+      const ul = document.createElement('ul');
+      if(isRoot) ul.classList.add('open');
+
+      keys.forEach(key => {
+        const child = node.children[key];
+        if (child.type === 'folder') {
+          const folderDiv = document.createElement('div');
+          folderDiv.className = 'folder';
+          const h = document.createElement('h3');
+          const arrow = document.createElement('span');
+          arrow.textContent = '▶';
+          arrow.className = 'arrow';
+          h.appendChild(arrow);
+          h.appendChild(document.createTextNode('📁 ' + child.name));
+          folderDiv.appendChild(h);
+
+          const subUl = document.createElement('ul');
+          folderDiv.appendChild(subUl);
+          container.appendChild(folderDiv);
+
+          h.addEventListener('click', () => {
+            const isOpen = subUl.classList.toggle('open');
+            arrow.style.transform = isOpen ? 'rotate(90deg)' : 'rotate(0)';
+          });
+
+          renderFolder(child, subUl);
+        } else if (child.type === 'file') {
+          if (search && !child.name.toLowerCase().includes(search) && !child.path.toLowerCase().includes(search)) return;
+          const ext = child.name.includes('.') ? '.' + child.name.split('.').pop().toLowerCase() : '(sem extensão)';
+          if (!selectedExts.has(ext)) return;
+
+          const li = document.createElement('li');
+          li.textContent = child.name;
+
+          const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${child.path}`;
+          const testUrl = `https://htmlpreview.github.io/?https://github.com/${owner}/${repo}/blob/${branch}/${child.path}`;
+
+          const btnCode = document.createElement('a');
+          btnCode.href = rawUrl;
+          btnCode.target = '_blank';
+          btnCode.className = 'btn btn-code';
+          btnCode.textContent = 'Ver código';
+          li.appendChild(btnCode);
+
+          if (child.name.toLowerCase().endsWith('.html')) {
+            const btnTest = document.createElement('a');
+            btnTest.href = testUrl;
+            btnTest.target = '_blank';
+            btnTest.className = 'btn btn-test';
+            btnTest.textContent = '▶ Testar';
+            li.appendChild(btnTest);
+          }
+
+          ul.appendChild(li);
+        }
+      });
+
+      container.appendChild(ul);
+    }
+
+    refreshBtn.addEventListener('click', loadTree);
+    searchInput.addEventListener('input', () => loadTree());
+    loadTree();
+  </script>
+
+  <footer>Feito com 💙💜 para navegar no repositório GitHub</footer>
+</body>
+</html>

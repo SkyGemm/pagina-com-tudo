@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Validação de Email</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --text-color: #1f2937;
+            --light-gray: #f3f4f6;
+            --medium-gray: #e5e7eb;
+            --dark-gray: #6b7280;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .validation-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+        
+        .validation-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .validation-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .validation-header p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+        
+        .validation-body {
+            padding: 2rem;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--medium-gray);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+        
+        .step {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--medium-gray);
+            color: var(--dark-gray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .step.completed {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-control:invalid {
+            border-color: var(--error-color);
+        }
+        
+        .help-text {
+            font-size: 0.75rem;
+            color: var(--dark-gray);
+            margin-top: 0.25rem;
+            display: block;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .validation-feedback {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            display: none;
+        }
+        
+        .validation-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            display: block;
+        }
+        
+        .validation-error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            display: block;
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .validation-body {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="validation-container">
+        <div class="validation-header">
+            <h1>Validação de Email</h1>
+            <p>Verifique seu endereço de email para continuar</p>
+        </div>
+        
+        <div class="validation-body">
+            <div class="steps">
+                <div class="step completed">1</div>
+                <div class="step active">2</div>
+                <div class="step">3</div>
+            </div>
+            
+            <form id="emailValidationForm" novalidate>
+                <div class="form-group">
+                    <label for="email">Endereço de Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="form-control" 
+                        placeholder="seu@email.com" 
+                        required
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                        title="Por favor, insira um endereço de email válido"
+                    >
+                    <span class="help-text">Insira o email que você deseja validar</span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Validar Email</button>
+                
+                <div id="validationFeedback" class="validation-feedback">
+                    Seu email foi validado com sucesso!
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('emailValidationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('email');
+            const feedback = document.getElementById('validationFeedback');
+            
+            if (emailInput.checkValidity()) {
+                feedback.textContent = `Email ${emailInput.value} validado com sucesso!`;
+                feedback.className = 'validation-feedback validation-success';
+                
+                // Simular envio para o servidor
+                setTimeout(() => {
+                    document.querySelector('.step.active').classList.remove('active');
+                    document.querySelector('.step.active').nextElementSibling.classList.add('active');
+                    feedback.textContent += ' Redirecionando para a próxima etapa...';
+                }, 1500);
+            } else {
+                feedback.textContent = 'Por favor, insira um endereço de email válido.';
+                feedback.className = 'validation-feedback validation-error';
+            }
+            
+            feedback.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

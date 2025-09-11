@@ -1,0 +1,124 @@
+:root {
+    --cor-manha: #FF9A76;
+    --cor-tarde: #FF6B6B;
+    --cor-noite: #4B5D67;
+    --sombra: 0 10px 20px rgba(0,0,0,0.1);
+    --transicao: all 0.5s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 20px;
+    transition: var(--transicao);
+}
+
+body.manha {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+
+body.tarde {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+}
+
+body.noite {
+    background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+}
+
+.container {
+    text-align: center;
+    padding: 40px 30px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: var(--sombra);
+    backdrop-filter: blur(10px);
+    max-width: 500px;
+    width: 100%;
+    transition: var(--transicao);
+    transform-style: preserve-3d;
+}
+
+h1 {
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    font-weight: 600;
+    transition: var(--transicao);
+    position: relative;
+    display: inline-block;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: var(--cor-manha);
+    transition: var(--transicao);
+}
+
+body.manha h1::after {
+    background: var(--cor-manha);
+}
+
+body.tarde h1::after {
+    background: var(--cor-tarde);
+}
+
+body.noite h1::after {
+    background: var(--cor-noite);
+}
+
+.imagem-periodo {
+    max-width: 100%;
+    height: auto;
+    max-height: 300px;
+    border-radius: 15px;
+    margin: 20px auto;
+    display: block;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    transition: var(--transicao);
+    transform: perspective(1000px) rotateY(0deg);
+    border: 5px solid white;
+}
+
+.imagem-periodo:hover {
+    transform: perspective(1000px) rotateY(10deg) scale(1.03);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 30px 20px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .imagem-periodo {
+        max-height: 250px;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.imagem-periodo {
+    animation: fadeIn 0.8s ease-out;
+}

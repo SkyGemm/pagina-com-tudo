@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Login</title>
+    <link rel="stylesheet" href="senhastyles.css">
+</head>
+<body>
+    <div class="container-login">
+        <div class="wrap-login">
+            <form class="login-form" id="loginForm">
+                <span class="login-form-title">Login</span>
+                
+                <div class="wrap-input">
+                    <input class="input" type="text" id="usuario" name="usuario" required>
+                    <span class="focus-input" data-placeholder="Usuário"></span>
+                </div>
+                
+                <div class="wrap-input">
+                    <input class="input" type="password" id="senha" name="senha" required>
+                    <span class="focus-input" data-placeholder="Senha"></span>
+                </div>
+                
+                <div class="container-login-form-btn">
+                    <button type="submit" class="login-form-btn">Acessar</button>
+                </div>
+                
+                <div class="text-center" id="mensagem"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="senhascript.js"></script>
+</body>
+</html>
