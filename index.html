@@ -138,6 +138,7 @@
     const filtersEl = document.getElementById('filters');
 
     let selectedExts = new Set();
+    let rootData = null;
 
     async function loadTree() {
       statusEl.textContent = '⏳ Carregando lista de arquivos...';
