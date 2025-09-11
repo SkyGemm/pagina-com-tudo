@@ -233,20 +233,12 @@
       return root;
     }
 
-    function renderFolder(node, container, isRoot=false) {
+    function renderFolder(node, container) {
       const search = searchInput.value.trim().toLowerCase();
-      let keys = Object.keys(node.children);
-
-      // arquivos primeiro, depois pastas
-      keys.sort((a, b) => {
-        const aType = node.children[a].type;
-        const bType = node.children[b].type;
-        if (aType !== bType) return aType === 'file' ? -1 : 1;
-        return a.localeCompare(b);
-      });
-
+      const keys = Object.keys(node.children).sort((a, b) => a.localeCompare(b));
+      let count = 0;
       const ul = document.createElement('ul');
-      if(isRoot) ul.classList.add('open');
+      ul.classList.add('open');
 
       keys.forEach(key => {
         const child = node.children[key];
@@ -270,17 +262,18 @@
             arrow.style.transform = isOpen ? 'rotate(90deg)' : 'rotate(0)';
           });
 
-          renderFolder(child, subUl);
+          count += renderFolder(child, subUl);
         } else if (child.type === 'file') {
           if (search && !child.name.toLowerCase().includes(search) && !child.path.toLowerCase().includes(search)) return;
           const ext = child.name.includes('.') ? '.' + child.name.split('.').pop().toLowerCase() : '(sem extensão)';
           if (!selectedExts.has(ext)) return;
 
           const li = document.createElement('li');
-          li.textContent = child.name;
+          const sizeText = formatSize(child.size);
+          li.innerHTML = `${child.name} <small>(${sizeText})</small>`;
 
           const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${child.path}`;
-          const testUrl = `https://htmlpreview.github.io/?https://github.com/${owner}/${repo}/blob/${branch}/${child.path}`;
+          const testUrl = `https://raw.githack.com/${owner}/${repo}/${branch}/${child.path}`;
 
           const btnCode = document.createElement('a');
           btnCode.href = rawUrl;
@@ -299,9 +292,9 @@
           }
 
           ul.appendChild(li);
+          count++;
         }
       });
-
       container.appendChild(ul);
     }
 
