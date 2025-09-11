@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jogo de Corrida 2D - Reinício com R e Quicar</title>
+<title>Jogo de Corrida 2D - Música Contínua e Reinício com R</title>
 <style>
 body {
     margin: 0; padding: 0;
@@ -59,7 +59,10 @@ const hornSound = new Audio("buzinacarro.mp3"); hornSound.volume=0.5;
 const crashSound = new Audio("crash.mp3"); crashSound.volume=0.8;
 const musicSound = new Audio("musica.mp3"); musicSound.loop=true; musicSound.volume=0.40;
 [engineSound,hornSound,crashSound,musicSound].forEach(s=>s.load());
-musicSound.play();
+
+// Funções de música
+function startMusic(){ musicSound.currentTime=0; musicSound.play().catch(()=>{}); }
+function stopMusic(){ musicSound.pause(); }
 
 // Motor com setas ↑
 document.addEventListener("keydown", e => { if(e.key==="ArrowUp" && engineSound.paused) engineSound.play(); });
@@ -88,7 +91,9 @@ function init(){
     gameOverScreen.style.display='none';
     car.x=canvas.width/2-15; car.y=canvas.height-100;
     if(bounceInterval) { clearInterval(bounceInterval); bounceInterval=null; }
-    lastTimestamp=0; requestAnimationFrame(gameLoop);
+    lastTimestamp=0; 
+    startMusic(); // inicia música
+    requestAnimationFrame(gameLoop);
 }
 
 function gameLoop(timestamp){
@@ -134,7 +139,7 @@ function checkCollisions(){
 }
 
 function gameOver(){
-    gameRunning=false; crashSound.play();
+    gameRunning=false; crashSound.play(); stopMusic();
     finalScoreElement.textContent=`Pontuação: ${score}`;
     gameOverScreen.style.display='flex';
     // Efeito quicar
@@ -162,5 +167,3 @@ init();
 </script>
 </body>
 </html>
-
-
