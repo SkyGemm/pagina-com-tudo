@@ -200,11 +200,8 @@
           filtersEl.appendChild(label);
         });
 
-        statusEl.textContent = `✅ Arquivos encontrados: ${tree.length}`;
         renderAll(root);
-      } catch (err) {
-        statusEl.textContent = '❌ Falha: ' + err.message;
-      }
+      } 
     }
 
     function renderAll(root) {
