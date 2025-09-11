@@ -123,6 +123,7 @@
   </div>
 
   <script>
+  document.addEventListener('DOMContentLoaded', () => {
     const owner = 'SkyGemm';
     const repo = 'pagina-com-tudo';
     const branch = 'main';
@@ -306,6 +307,7 @@
     refreshBtn.addEventListener('click', loadTree);
     searchInput.addEventListener('input', () => loadTree());
     loadTree();
+  });
   </script>
 
   <footer>Feito com 💙💜 para navegar no repositório GitHub</footer>
