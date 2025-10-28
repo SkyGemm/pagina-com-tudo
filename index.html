@@ -123,9 +123,7 @@
       <a href="https://snack.expo.dev/@vini2126/locadora" target="_blank" class="btn btn-react2">React Locadora</a>
       <a href="https://snack.expo.dev/@vini2126/laughing-red-pudding" target="_blank" class="btn btn-react3">React PetShop</a>
       <a href="https://snack.expo.dev/@vini2126/playlistmusic" target="_blank" class="btn btn-react1">React PlayListMusic</a>
-      <a href="https://planeta-delta.vercel.app/" target="_blank" class="btn btn-react2">Eco Calculator.</a>
       <a href="https://snack.expo.dev/@vini2126/cafeteria" target="_blank" class="btn btn-react3">React Cafeteria</a>
-      <a href="https://zrenatokkj.github.io/HUBdosJogos/indexPrincipal.html" target="_blank" class="btn btn-react1">HUB de jogos</a>
     </div>
   </div>
 
@@ -209,23 +207,24 @@
 
         renderAll(root);
       } catch (err) {
-  statusEl.textContent = '❌ Falha: ' + err.message;
-  console.error('Erro ao carregar árvore:', err);}
+        statusEl.textContent = '❌ Falha: ' + err.message;
+        console.error('Erro ao carregar árvore:', err);
+      }
     }
 
     function renderAll(root) {
-  let topButtons = filesList.querySelector('.top-buttons');
-  // Limpa a lista antes de renderizar
-  filesList.querySelectorAll('ul, .folder').forEach(el => el.remove());
+      let topButtons = filesList.querySelector('.top-buttons');
+      // Limpa a lista antes de renderizar
+      filesList.querySelectorAll('ul, .folder').forEach(el => el.remove());
 
-  renderFolder(root, filesList);
-  filesList.insertBefore(topButtons, filesList.firstChild);
-}
-
+      renderFolder(root, filesList);
+      filesList.insertBefore(topButtons, filesList.firstChild);
     }
 
     function buildHierarchy(tree) {
       const root = { type: 'folder', name: '', children: {} };
+      
+      // Processar arquivos reais do GitHub
       tree.forEach(item => {
         if (item.type !== 'blob') return;
         const parts = item.path.split('/');
@@ -241,6 +240,49 @@
           }
         });
       });
+
+      // Adicionar links como arquivos virtuais
+      const virtualFiles = [
+        {
+          name: 'HUB de Jogos.html',
+          path: 'links/HUB-de-Jogos.html',
+          size: 1024,
+          url: 'https://zrenatokkj.github.io/HUBdosJogos/indexPrincipal.html',
+          type: 'virtual'
+        },
+        {
+          name: 'ECO Calculator.html', 
+          path: 'links/ECO-Calculator.html',
+          size: 1024,
+          url: 'https://planeta-delta.vercel.app/',
+          type: 'virtual'
+        }
+      ];
+
+      // Adicionar à estrutura
+      virtualFiles.forEach(virtualFile => {
+        const parts = virtualFile.path.split('/');
+        let current = root;
+        
+        parts.forEach((part, i) => {
+          if (i === parts.length - 1) {
+            current.children[part] = { 
+              type: 'file', 
+              name: virtualFile.name,
+              path: virtualFile.path,
+              size: virtualFile.size,
+              url: virtualFile.url,
+              isVirtual: true
+            };
+          } else {
+            if (!current.children[part]) {
+              current.children[part] = { type: 'folder', name: part, children: {} };
+            }
+            current = current.children[part];
+          }
+        });
+      });
+
       return root;
     }
 
@@ -281,25 +323,39 @@
 
           const li = document.createElement('li');
           const sizeText = formatSize(child.size);
-          li.innerHTML = `${child.name} <small>(${sizeText})</small>`;
+          
+          // Ícone especial para arquivos virtuais
+          const icon = child.isVirtual ? '🔗' : '📄';
+          li.innerHTML = `${icon} ${child.name} <small>(${sizeText})</small>`;
 
-          const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${child.path}`;
-          const testUrl = `https://raw.githack.com/${owner}/${repo}/${branch}/${child.path}`;
+          // Para arquivos virtuais, usar a URL direta
+          if (child.isVirtual) {
+            const btnCode = document.createElement('a');
+            btnCode.href = child.url;
+            btnCode.target = '_blank';
+            btnCode.className = 'btn btn-code';
+            btnCode.textContent = 'Abrir Site';
+            li.appendChild(btnCode);
+          } else {
+            // Para arquivos reais do GitHub
+            const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${child.path}`;
+            const testUrl = `https://raw.githack.com/${owner}/${repo}/${branch}/${child.path}`;
 
-          const btnCode = document.createElement('a');
-          btnCode.href = rawUrl;
-          btnCode.target = '_blank';
-          btnCode.className = 'btn btn-code';
-          btnCode.textContent = 'Ver código';
-          li.appendChild(btnCode);
+            const btnCode = document.createElement('a');
+            btnCode.href = rawUrl;
+            btnCode.target = '_blank';
+            btnCode.className = 'btn btn-code';
+            btnCode.textContent = 'Ver código';
+            li.appendChild(btnCode);
 
-          if (child.name.toLowerCase().endsWith('.html')) {
-            const btnTest = document.createElement('a');
-            btnTest.href = testUrl;
-            btnTest.target = '_blank';
-            btnTest.className = 'btn btn-test';
-            btnTest.textContent = '▶ Testar';
-            li.appendChild(btnTest);
+            if (child.name.toLowerCase().endsWith('.html')) {
+              const btnTest = document.createElement('a');
+              btnTest.href = testUrl;
+              btnTest.target = '_blank';
+              btnTest.className = 'btn btn-test';
+              btnTest.textContent = '▶ Testar';
+              li.appendChild(btnTest);
+            }
           }
 
           ul.appendChild(li);
@@ -329,8 +385,13 @@
     }
 
     refreshBtn.addEventListener('click', loadTree);
-    searchInput.addEventListener('input', () => renderAll());
-    loadTree();
+    searchInput.addEventListener('input', () => {
+      if (rootData) renderAll(rootData);
+    });
+    
+    loadTree().then(() => {
+      rootData = buildHierarchy([]); // Será atualizado pelo loadTree
+    });
   });
   </script>
 
