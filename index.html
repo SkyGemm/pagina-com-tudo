@@ -214,9 +214,14 @@
     }
 
     function renderAll(root) {
-      let topButtons = filesList.querySelector('.top-buttons');
-      renderFolder(root, filesList, true);
-      filesList.insertBefore(topButtons, filesList.firstChild);
+  let topButtons = filesList.querySelector('.top-buttons');
+  // Limpa a lista antes de renderizar
+  filesList.querySelectorAll('ul, .folder').forEach(el => el.remove());
+
+  renderFolder(root, filesList);
+  filesList.insertBefore(topButtons, filesList.firstChild);
+}
+
     }
 
     function buildHierarchy(tree) {
